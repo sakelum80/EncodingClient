@@ -11,12 +11,6 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
 
-//const string apiBaseUrl = "https://localhost:7090";
-//const string authEndpoint = "/api/v1.0/auth/token";
-//const string encodeEndpoint = "/api/v1.0/encoding/rle";
-//const string email = "admin@gmail.com";
-//const string password = "admin123!";
-
 
 // Get API settings
 var apiSettings = configuration.GetSection("ApiSettings");
