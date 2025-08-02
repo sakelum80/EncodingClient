@@ -2,16 +2,43 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 
 
-const string apiBaseUrl = "https://localhost:7090";
-const string authEndpoint = "/api/v1.0/auth/token";
-const string encodeEndpoint = "/api/v1.0/encoding/rle";
-const string email = "admin@gmail.com";
-const string password = "admin123!";
+// Build configuration
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
+
+//const string apiBaseUrl = "https://localhost:7090";
+//const string authEndpoint = "/api/v1.0/auth/token";
+//const string encodeEndpoint = "/api/v1.0/encoding/rle";
+//const string email = "admin@gmail.com";
+//const string password = "admin123!";
 
 
-using var httpClient = new HttpClient { BaseAddress = new Uri(apiBaseUrl) };
+// Get API settings
+var apiSettings = configuration.GetSection("ApiSettings");
+var baseUrl = apiSettings["BaseUrl"];
+var authEndpoint = apiSettings["AuthEndpoint"];
+var encodeEndpoint = apiSettings["EncodeEndpoint"];
+var email = apiSettings["Credentials:Email"];
+var password = apiSettings["Credentials:Password"];
+
+
+// Validate configuration
+if (string.IsNullOrEmpty(baseUrl) ||
+    string.IsNullOrEmpty(authEndpoint) ||
+    string.IsNullOrEmpty(encodeEndpoint) ||
+    string.IsNullOrEmpty(email) ||
+    string.IsNullOrEmpty(password))
+{
+    Console.WriteLine("Missing required configuration in appsettings.json");
+    return;
+}
+
+using var httpClient = new HttpClient { BaseAddress = new Uri(baseUrl) };
 httpClient.DefaultRequestHeaders.Accept.Add(
     new MediaTypeWithQualityHeaderValue("application/json"));
 
