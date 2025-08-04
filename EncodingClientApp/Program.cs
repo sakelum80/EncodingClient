@@ -46,19 +46,50 @@ try
         return;
     }
 
-    // Read input text
-    Console.Write("Enter text to encode: ");
-    var inputText = Console.ReadLine();
-
-    if (string.IsNullOrWhiteSpace(inputText))
+    while (true)
     {
-        Console.WriteLine("No input provided");
-        return;
-    }
+        Console.Clear();
+        Console.WriteLine("=== Run-Length Encoding Client ===");
+        Console.WriteLine("1. Encode text");
+        Console.WriteLine("2. Exit");
+        Console.Write("Choose an option (1-2): ");
 
-    // Call Encoding API
-    var encodedResult = await EncodeText(httpClient, token, inputText);
-    Console.WriteLine($"Encoded result: {encodedResult}");
+        var choice = Console.ReadLine();
+
+        if (choice == "2")
+        {
+            Console.WriteLine("Exiting application...");
+            break;
+        }
+
+        if (choice != "1")
+        {
+            Console.WriteLine("Invalid option. Press any key to continue...");
+            Console.ReadKey();
+            continue;
+        }
+
+        Console.Write("\nEnter text to encode: ");
+        var inputText = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(inputText))
+        {
+            Console.WriteLine("No input provided. Press any key to continue...");
+            Console.ReadKey();
+            continue;
+        }
+
+        Console.WriteLine("\nEncoding text...");
+        var encodedResult = await EncodeText(httpClient,token, inputText);
+
+        if (!string.IsNullOrEmpty(encodedResult))
+        {
+            Console.WriteLine($"\nEncoded result: {encodedResult}");
+        }
+
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey();
+    }
 }
 catch (Exception ex)
 {
